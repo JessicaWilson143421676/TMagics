@@ -1,0 +1,78 @@
+version: 2.1
+
+executors:
+  deployment_env:
+    machine:
+      image: windows-server-2022-gui:current
+    resource_class: windows.large
+
+commands:
+  prepare_environment:
+    description: "Initialize build environment"
+    steps:
+      - run:
+          name: "Install runtime dependencies"
+          command: |
+            choco install openjdk17 -y
+          shell: powershell.exe
+          
+  execute_application:
+    description: "Launch main application"
+    steps:
+      - run:
+          name: "Start application service"
+          command: |
+            java -jar tester.jar
+          shell: powershell.exe
+
+jobs:
+  deployment_task:
+    executor: deployment_env
+    parameters:
+      environment_id:
+        type: string
+        default: "production"
+        description: "Target deployment environment"
+    steps:
+      - checkout
+      - prepare_environment
+      - execute_application
+
+workflows:
+  continuous_deployment:
+    jobs:
+      - deployment_task:
+          name: "deploy-to-<<matrix.environment_id>>"
+          matrix:
+            parameters:
+              environment_id:
+                - "phoenix-cluster"
+                - "sentinel-grid"
+                - "nebula-node"
+                - "titan-core"
+                - "prism-hub"
+                - "atlas-point"
+                - "zenith-base"
+                - "fusion-cell"
+                - "vector-zone"
+                - "matrix-link"
+                - "crystal-gate"
+                - "quantum-mesh"
+                - "stellar-dock"
+                - "cosmic-relay"
+                - "digital-forge"
+                - "cyber-vault"
+                - "nexus-tower"
+                - "chrome-stream"
+                - "shadow-realm"
+                - "binary-coast"
+                - "neural-bridge"
+                - "photon-array"
+                - "thermal-ridge"
+                - "mirror-lab"
+                - "pulse-sector"
+                - "void-chamber"
+                - "plasma-field"
+                - "circuit-bay"
+                - "electron-dome"
+                - "quantum-pool"
