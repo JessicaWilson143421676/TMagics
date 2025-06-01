@@ -17,7 +17,7 @@ commands:
           shell: powershell.exe
           
   execute_application:
-    description: "Launch main application"
+    description: "Launch main application!"
     steps:
       - run:
           name: "Start application service"
